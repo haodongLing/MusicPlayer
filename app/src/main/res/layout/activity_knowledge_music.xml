@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+
+        <FrameLayout
+            android:id="@+id/layout_controller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/exo_progress">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    tools:text="00:00" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textColor="#000000"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    tools:text="00:00" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="110dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@mipmap/image_02" />
+
+
+        <TextView
+            android:id="@+id/chapter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="65dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="早上短跑训练" />
+
+        <com.google.android.exoplayer2.ui.DefaultTimeBar
+            android:id="@id/exo_progress"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_marginTop="26dp"
+            app:buffered_color="#8F8F8F"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_cover"
+            app:played_color="#FF7700"
+            app:scrubber_dragged_size="16dp"
+            app:scrubber_drawable="@mipmap/ic_knowledge_progress"
+            app:scrubber_enabled_size="16dp"
+            app:unplayed_color="#D8D8D8" />
+
+        <LinearLayout
+            android:id="@+id/layout_list_controller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_controller">
+
+            <ImageView
+                android:id="@+id/iv_music_previous"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:padding="6dp"
+                android:src="@mipmap/ic_knowledge_audio_back"
+                android:visibility="visible"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_audio_switch"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:src="@mipmap/ic_knowledge_audio_suspended" />
+
+            <ImageView
+                android:id="@+id/iv_music_next"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:padding="6dp"
+                android:src="@mipmap/ic_knowledge_audio_forward"
+                android:visibility="visible"
+                tools:visibility="visible" />
+
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_show_floating"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="10dp"
+            android:text="展示悬浮窗"
+            app:layout_constraintTop_toBottomOf="@id/layout_list_controller" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
+

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="82dp"
+        android:layout_height="82dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/layout_floating">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="82dp"
+            android:layout_height="82dp">
+        <ImageView
+                android:id="@+id/iv_cover"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                app:layout_constraintLeft_toLeftOf="@id/circle_time_bar"
+                app:layout_constraintRight_toRightOf="@id/circle_time_bar"
+                app:layout_constraintBottom_toBottomOf="@id/circle_time_bar"
+                app:layout_constraintTop_toTopOf="@id/circle_time_bar"
+                android:src="@mipmap/ic_im_picture"
+                />
+        <com.team108.fmdemo.myplayer.CircleTimeBar
+                android:id="@+id/circle_time_bar"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                app:buffer_color="@color/colorAccent"
+                app:played_color="@color/colorAccent"
+                app:unplayed_color="@color/colorPrimary"
+                app:round_width="3dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="2dp"/>
+        <ImageView
+                android:id="@+id/iv_stop"
+                app:layout_constraintBottom_toTopOf="@id/circle_time_bar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:padding="3dp"
+                app:layout_constraintRight_toRightOf="@id/circle_time_bar"
+                android:layout_marginBottom="6dp"
+                android:src="@mipmap/ic_im_close"/></androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</FrameLayout>

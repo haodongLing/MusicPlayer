@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleTimeBar">
+        <attr name="round_width" format="dimension" />
+        <attr name="played_color" format="color" />
+        <attr name="buffer_color" format="color" />
+        <attr name="unplayed_color" format="color" />
+    </declare-styleable>
+</resources>
