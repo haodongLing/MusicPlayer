@@ -1,11 +1,5 @@
 package com.haodong.musicplayer;
 
-import androidx.appcompat.app.AppCompatActivity;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
-
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -18,22 +12,26 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.TimeBar;
 import com.google.android.exoplayer2.util.Util;
-import com.haodong.musicplayer.event.MusicShowWindowEvent;
 import com.haodong.musicplayer.myplayer.Chapter;
 import com.haodong.musicplayer.myplayer.ExoPlayerManager;
 import com.haodong.musicplayer.myplayer.ExoPlayerService;
 import com.haodong.musicplayer.myplayer.LogUtil;
 import com.haodong.musicplayer.permission.FloatWindowManager;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ExoPlayerService.OnProgressLis{
+import androidx.appcompat.app.AppCompatActivity;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+
+public class MainActivity extends AppCompatActivity implements ExoPlayerService.OnProgressLis {
     @BindView(R.id.iv_music_previous)
     ImageView ivPrevious;
     @BindView(R.id.iv_music_next)
@@ -67,32 +65,41 @@ public class MainActivity extends AppCompatActivity implements ExoPlayerService.
 
 
         } else if (id == R.id.iv_audio_switch) {
-            if (!ExoPlayerManager.getDefault().isPaused()){
+            if (!ExoPlayerManager.getDefault().isPaused()) {
                 ivStop.setImageResource(R.mipmap.ic_knowledge_audio_suspended);
                 ExoPlayerManager.getDefault().pauseRadio();
-            }else {
+            } else {
                 ivStop.setImageResource(R.mipmap.ic_knowledge_audio_play);
                 ExoPlayerManager.getDefault().resumeRadio();
             }
         } else if (id == R.id.btn_show_floating) {
             LogUtil.i();
-            if (FloatWindowManager.getInstance().applyOrShowFloatWindow(this)) {
-                EventBus.getDefault().postSticky(new MusicShowWindowEvent());
+            if (mService != null) {
+                if (FloatWindowManager.getInstance().applyOrShowFloatWindow(this) && !ExoPlayerManager.getDefault().isStoped()) {
+                   mService.showWindow();
+                    // todo
+                } else if (!mService.isWindowDismiss()) {
+                    mService.dismissWindow();
+                }
             }
+
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        unbinder= ButterKnife.bind(this);
+        setContentView(R.layout.activity_knowledge_music);
+        unbinder = ButterKnife.bind(this);
         initWidget();
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
     }
+
     @Override
     public void onBackPressed() {
         /*这是重点*/
@@ -100,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements ExoPlayerService.
     }
 
     private void initWidget() {
+        ExoPlayerManager.getDefault().init(this);
         bindService();
 
         timeBar.addListener(new TimeBar.OnScrubListener() {
@@ -122,25 +130,27 @@ public class MainActivity extends AppCompatActivity implements ExoPlayerService.
 
 
     }
+
     private void bindService() {
         LogUtil.i();
         serviceIntent = new Intent(MainActivity.this, ExoPlayerService.class);
-        if(serviceConnection == null) {
+        if (serviceConnection == null) {
             serviceConnection = new ServiceConnection() {
 
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    mService= ((ExoPlayerService.MusicBinder)service).getService();
-                    String uri = "https://storage.googleapis.com/exoplayer-test-media-0/play.mp3";
+                    mService = ((ExoPlayerService.MusicBinder) service).getService();
+//                    String uri = "https://storage.googleapis.com/exoplayer-test-media-0/play.mp3";
                     mService.setOnProgressLis(MainActivity.this).initListener();
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             /*模仿网络请求*/
+                            LogUtil.d("发送请求");
                             String uri = "https://storage.googleapis.com/exoplayer-test-media-0/play.mp3";
                             ExoPlayerManager.getDefault().startRadio(uri);
                         }
-                    },1000);
+                    }, 1000);
                 }
 
                 @Override
@@ -149,10 +159,12 @@ public class MainActivity extends AppCompatActivity implements ExoPlayerService.
                 }
             };
             bindService(serviceIntent, serviceConnection, BIND_AUTO_CREATE);
+            startService(serviceIntent);
         }
     }
+
     private void unbindService() {
-        if(null != serviceConnection) {
+        if (null != serviceConnection) {
             unbindService(serviceConnection);
             serviceConnection = null;
         }
@@ -201,6 +213,27 @@ public class MainActivity extends AppCompatActivity implements ExoPlayerService.
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        LogUtil.i("onPlayerStateChanged");
+        if (playWhenReady) {
+            switch (playbackState) {
+                case Player.STATE_READY:
+                    LogUtil.d("----time5");
+                    ivStop.setImageResource(R.mipmap.ic_knowledge_audio_play);
+                    ExoPlayerManager.getDefault().setPaused(false);
+                    break;
+                case Player.STATE_ENDED:
+                    /*如果是节，播放下一首*/
+                    LogUtil.i("播放下一首");
+                    break;
+                default:
+                    ivStop.setImageResource(R.mipmap.ic_knowledge_audio_suspended);
+                    ExoPlayerManager.getDefault().setPaused(true);
+                    break;
 
+            }
+        } else {
+            ivStop.setImageResource(R.mipmap.ic_knowledge_audio_suspended);
+            ExoPlayerManager.getDefault().setPaused(true);
+        }
     }
 }
